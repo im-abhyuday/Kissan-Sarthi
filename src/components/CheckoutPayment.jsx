@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { CreditCard, Lock, Shield } from 'lucide-react';
+import { CreditCard, Lock, Shield, RefreshCw, CheckCircle2 } from 'lucide-react';
 
 export default function CheckoutPayment({ calculateTotal, setCart, setView, t }) {
   const [loading, setLoading] = useState(false);
+  const [isSubscription, setIsSubscription] = useState(false);
+  
+  const baseTotal = calculateTotal();
+  const finalTotal = isSubscription ? Math.floor(baseTotal * 0.9) : baseTotal;
 
   const handlePayment = (e) => {
     e.preventDefault();
@@ -36,10 +40,39 @@ export default function CheckoutPayment({ calculateTotal, setCart, setView, t })
           <div className="p-6">
             {/* Amount */}
             <div className="mb-6 pb-5 border-b border-gray-100 text-center">
-              <p className="text-gray-500 text-sm mb-1">{t('total')} {t('pay')}</p>
-              <p className="text-4xl font-extrabold bg-gradient-to-r from-green-700 to-emerald-600 bg-clip-text text-transparent">
-                ₹{calculateTotal()}
-              </p>
+              <p className="text-gray-500 text-sm mb-1">{isSubscription ? 'Recurring Weekly Total' : `${t('total')} ${t('pay')}`}</p>
+              <div className="flex items-center justify-center gap-2">
+                {isSubscription && <span className="text-xl text-gray-400 line-through">₹{baseTotal}</span>}
+                <p className="text-4xl font-extrabold bg-gradient-to-r from-green-700 to-emerald-600 bg-clip-text text-transparent">
+                  ₹{finalTotal} {isSubscription && <span className="text-sm text-gray-500 font-medium">/ week</span>}
+                </p>
+              </div>
+            </div>
+
+            {/* Subscription Toggle (CSA Model) */}
+            <div 
+              onClick={() => setIsSubscription(!isSubscription)}
+              className={`mb-6 p-4 rounded-2xl border-2 cursor-pointer transition-all duration-300 relative overflow-hidden ${
+                isSubscription ? 'border-emerald-500 bg-emerald-50/50' : 'border-gray-200 bg-white hover:border-emerald-300'
+              }`}
+            >
+              {isSubscription && (
+                <div className="absolute top-0 right-0 p-3">
+                  <CheckCircle2 size={24} className="text-emerald-500 animate-fade-in" />
+                </div>
+              )}
+              <div className="flex items-start gap-3">
+                <div className={`p-2 rounded-xl mt-1 ${isSubscription ? 'bg-emerald-100' : 'bg-gray-100'}`}>
+                  <RefreshCw size={20} className={isSubscription ? 'text-emerald-600' : 'text-gray-500'} />
+                </div>
+                <div>
+                  <h4 className={`font-bold ${isSubscription ? 'text-emerald-800' : 'text-gray-800'}`}>Weekly Farm Box Delivery</h4>
+                  <p className="text-xs text-gray-500 mt-1">Subscribe to get this exact cart delivered fresh from the farm every week.</p>
+                  <p className="text-sm font-bold text-emerald-600 mt-2 flex items-center gap-1">
+                    <span className="bg-emerald-100 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">Save 10% Extra</span>
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Payment Form */}
@@ -99,7 +132,12 @@ export default function CheckoutPayment({ calculateTotal, setCart, setView, t })
                     </svg>
                     Processing...
                   </span>
-                ) : `${t('pay')} ₹${calculateTotal()}`}
+                ) : (
+                  <span className="flex items-center justify-center gap-2">
+                    {isSubscription ? <RefreshCw size={18} /> : <CreditCard size={18} />}
+                    {isSubscription ? `Start Subscription (₹${finalTotal}/wk)` : `${t('pay')} ₹${finalTotal}`}
+                  </span>
+                )}
               </button>
             </form>
 

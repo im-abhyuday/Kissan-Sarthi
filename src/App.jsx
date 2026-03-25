@@ -18,6 +18,8 @@ import CartView from './components/CartView';
 import CheckoutPayment from './components/CheckoutPayment';
 import SuccessScreen from './components/SuccessScreen';
 import Footer from './components/Footer';
+import TermsOfService from './components/TermsOfService';
+import PrivacyPolicy from './components/PrivacyPolicy';
 import AgroChatbot from './components/AgroChatbot';
 
 export default function App() {
@@ -86,7 +88,19 @@ export default function App() {
       setCart(prev => [...prev.slice(0, idx), ...prev.slice(idx + 1)]);
     }
   };
-  const calculateTotal = () => cart.reduce((sum, item) => sum + parseInt(item.price), 0);
+  const calculateTotal = () => {
+    const grouped = cart.reduce((acc, item) => {
+      acc[item.id] = (acc[item.id] || 0) + 1;
+      return acc;
+    }, {});
+    
+    // Applying a 15% Wholesale Discount for B2B orders (quantity >= 5)
+    return Math.floor(cart.reduce((sum, item) => {
+      const qty = grouped[item.id];
+      const discount = qty >= 5 ? 0.15 : 0;
+      return sum + parseInt(item.price) * (1 - discount);
+    }, 0));
+  };
 
   // Determine views
   const showNavbar = view !== 'landing';
@@ -120,6 +134,8 @@ export default function App() {
       <main className="flex-1">
         <div key={view} className="animate-fade-in">
           {view === 'landing' && <HeroSection setView={setView} t={t} />}
+          {view === 'terms' && <TermsOfService setView={setView} t={t} />}
+          {view === 'privacy' && <PrivacyPolicy setView={setView} t={t} />}
           {view === 'login' && <LoginScreen setView={setView} onLogin={handleLogin} t={t} />}
           {view === 'farmer-signup' && <FarmerSignup setView={setView} onLogin={handleLogin} t={t} />}
           {view === 'buyer-signup' && <BuyerSignup setView={setView} onLogin={handleLogin} t={t} />}
@@ -136,6 +152,7 @@ export default function App() {
           {view === 'cart' && (
             <CartView 
               cart={cart} 
+              addToCart={addToCart}
               removeFromCart={removeFromCart} 
               calculateTotal={calculateTotal} 
               setView={setView} 
@@ -154,7 +171,7 @@ export default function App() {
         </div>
       </main>
 
-      {showFooter && <Footer t={t} />}
+      {showFooter && <Footer t={t} setView={setView} />}
       <AgroChatbot />
     </div>
   );

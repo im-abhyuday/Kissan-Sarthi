@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Leaf, ShoppingCart, Sprout, ArrowDown, Truck, Shield, Users } from 'lucide-react';
+import { Leaf, ShoppingCart, Sprout, ArrowDown, Truck, Shield, Users, TrendingUp, TrendingDown, MapPin, Package, ShieldCheck, Store, ChevronRight, ShoppingBag, Star, CheckCircle2, PlayCircle } from 'lucide-react';
 
 export default function HeroSection({ setView, t }) {
   const [countFarmers, setCountFarmers] = useState(0);
@@ -39,10 +39,49 @@ export default function HeroSection({ setView, t }) {
     { icon: '🧅', delay: '1.8s', x: '40%', y: '80%', size: 'text-3xl' },
   ];
 
+  const mandiPrices = [
+    { name: 'Red Onion', loc: 'Nashik', price: '₹22/kg', change: '+2.5%', trend: 'up' },
+    { name: 'Tomato', loc: 'Indore', price: '₹18/kg', change: '-1.2%', trend: 'down' },
+    { name: 'Potato', loc: 'Agra', price: '₹15/kg', change: '0.0%', trend: 'flat' },
+    { name: 'Cauliflower', loc: 'Pune', price: '₹40/kg', change: '+5.1%', trend: 'up' },
+    { name: 'Carrot', loc: 'Ooty', price: '₹65/kg', change: '-3.4%', trend: 'down' },
+    { name: 'Wheat', loc: 'Punjab', price: '₹2200/qtl', change: '+1.1%', trend: 'up' },
+    { name: 'Basmati Rice', loc: 'Haryana', price: '₹8500/qtl', change: '+0.5%', trend: 'up' }
+  ];
+
+  const featuredProducts = [
+    { name: 'Organic Red Onions', farmer: 'Ramesh Patil', location: 'Nashik, MH', price: '22', unit: 'kg', rating: 4.8 },
+    { name: 'Desi Tomatoes', farmer: 'Sunita Devi', location: 'Indore, MP', price: '18', unit: 'kg', rating: 4.9 },
+    { name: 'Premium Wheat', farmer: 'Harjit Singh', location: 'Ludhiana, PB', price: '2200', unit: 'qtl', rating: 5.0 },
+    { name: 'Fresh Carrots', farmer: 'Kumari Farm', location: 'Ooty, TN', price: '65', unit: 'kg', rating: 4.7 }
+  ];
+
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* Animated Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-green-900 via-green-800 to-emerald-900 animate-gradient-shift"></div>
+      
+      {/* Live Mandi Ticker */}
+      <div className="absolute top-0 w-full z-50 bg-black/40 backdrop-blur-md border-b border-white/10 overflow-hidden flex items-center h-10">
+        <div className="absolute left-0 z-10 bg-gradient-to-r from-green-900 to-transparent w-8 h-full"></div>
+        <div className="animate-marquee hover:pause whitespace-nowrap flex items-center gap-8 px-4 text-xs font-medium">
+          {/* Double the array to create a seamless loop effect */}
+          {[...mandiPrices, ...mandiPrices].map((item, idx) => (
+            <div key={idx} className="flex items-center gap-2 text-white/90">
+              <span className="opacity-60">•</span>
+              <span className="font-bold text-white">{item.name}</span>
+              <span className="text-white/60">({item.loc})</span>
+              <span className="text-emerald-300 ml-1">{item.price}</span>
+              <span className={`flex items-center text-[10px] ${item.trend === 'up' ? 'text-emerald-400' : item.trend === 'down' ? 'text-red-400' : 'text-gray-400'}`}>
+                {item.trend === 'up' && <TrendingUp size={12} className="mr-0.5" />}
+                {item.trend === 'down' && <TrendingDown size={12} className="mr-0.5" />}
+                {item.change}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="absolute right-0 z-10 bg-gradient-to-l from-emerald-900 to-transparent w-8 h-full"></div>
+      </div>
       
       {/* Overlay pattern */}
       <div className="absolute inset-0 opacity-10" style={{
@@ -82,9 +121,22 @@ export default function HeroSection({ setView, t }) {
         </h1>
 
         {/* Subtext */}
-        <p className="animate-slide-up-delay text-lg sm:text-xl text-green-100/80 text-center max-w-2xl mb-10 leading-relaxed">
+        <p className="animate-slide-up-delay text-lg sm:text-xl text-green-100/80 text-center max-w-2xl mb-8 leading-relaxed">
           {t('heroSubtext')}
         </p>
+
+        {/* Floating Trust Chips (Option 5) */}
+        <div className="animate-slide-up-delay flex flex-wrap justify-center gap-3 mb-10">
+          <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-[11px] sm:text-xs font-semibold text-emerald-100 uppercase tracking-wider">
+            <ShieldCheck size={14} className="text-emerald-400" /> 100% Secure Escrow
+          </span>
+          <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-[11px] sm:text-xs font-semibold text-emerald-100 uppercase tracking-wider">
+            <CheckCircle2 size={14} className="text-emerald-400" /> Verified Organic Quality
+          </span>
+          <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-[11px] sm:text-xs font-semibold text-emerald-100 uppercase tracking-wider">
+            <Truck size={14} className="text-emerald-400" /> Transparent Logistics
+          </span>
+        </div>
 
         {/* CTA Buttons */}
         <div className="animate-slide-up-delay-2 flex flex-col sm:flex-row gap-4 mb-16">
@@ -110,58 +162,81 @@ export default function HeroSection({ setView, t }) {
           </button>
         </div>
 
-        {/* Stats */}
-        <div className="animate-fade-in-delay grid grid-cols-3 gap-6 sm:gap-12 mb-12">
-          <div className="text-center">
-            <div className="text-3xl sm:text-4xl font-extrabold text-white">{countFarmers}+</div>
-            <div className="text-green-300 text-sm sm:text-base mt-1">{t('statFarmers')}</div>
+        {/* Trust & Certification Partner Tape (Option 3) */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 py-5 overflow-hidden flex items-center mb-16 shadow-2xl">
+          <div className="absolute left-0 z-20 bg-gradient-to-r from-emerald-900 to-transparent w-16 h-full"></div>
+          <div className="animate-marquee hover:pause whitespace-nowrap flex items-center gap-16 px-8 text-white/50 font-bold uppercase tracking-widest text-[13px]">
+             {[...Array(2)].map((_, i) => (
+                <React.Fragment key={i}>
+                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default"><ShieldCheck size={18} className="text-emerald-500" /> RBI Compliant Escrow</span>
+                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default">Razorpay Route</span>
+                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default"><CheckCircle2 size={18} className="text-emerald-500" /> FSSAI Certified</span>
+                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default">Cashfree Payments</span>
+                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default"><Leaf size={18} className="text-emerald-500" /> 100% Organic Verified</span>
+                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default">Startup India</span>
+                </React.Fragment>
+             ))}
           </div>
-          <div className="text-center">
-            <div className="text-3xl sm:text-4xl font-extrabold text-white">{countProducts.toLocaleString()}+</div>
-            <div className="text-green-300 text-sm sm:text-base mt-1">{t('statProducts')}</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl sm:text-4xl font-extrabold text-white">{countCities}+</div>
-            <div className="text-green-300 text-sm sm:text-base mt-1">{t('statCities')}</div>
-          </div>
+          <div className="absolute right-0 z-20 bg-gradient-to-l from-emerald-900 to-transparent w-16 h-full"></div>
         </div>
 
         {/* Scroll indicator */}
-        <div className="animate-bounce-slow absolute bottom-8">
-          <ArrowDown size={24} className="text-white/50" />
+        <div className="animate-bounce-slow mt-4 mb-16 z-10 relative">
+          <ArrowDown size={28} className="text-white/40" />
         </div>
       </div>
 
-      {/* How it Works Section */}
-      <div className="relative z-10 bg-white/5 backdrop-blur-sm py-16 px-4">
-        <h2 className="text-3xl font-bold text-white text-center mb-12">{t('howItWorks')}</h2>
-        <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
-          {[
-            { icon: <Users size={32} />, title: t('iAmFarmer'), desc: 'List your fresh produce directly. Set your own fair prices. Reach thousands of buyers.' },
-            { icon: <Shield size={32} />, title: t('paymentGateway'), desc: 'Safe & secure payments. Money goes directly to farmers. No middlemen commissions.' },
-            { icon: <Truck size={32} />, title: t('iAmBuyer'), desc: 'Browse fresh farm produce. Order directly. Get farm-fresh delivery to your door.' },
-          ].map((item, i) => (
-            <div 
-              key={i} 
-              className="group bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-8 text-center hover:bg-white/20 transition-all duration-500 hover:-translate-y-2"
-            >
-              <div className="inline-flex p-4 rounded-2xl bg-green-500/20 text-green-300 mb-4 group-hover:scale-110 transition-transform duration-300">
-                {item.icon}
+      {/* The Seed-to-Sale Visual Journey Segment */}
+      <div className="relative z-10 bg-stone-50 py-24 px-4 overflow-hidden border-t border-gray-200">
+        <h2 className="text-4xl font-black text-gray-900 text-center mb-4">The Kissan Sarthi Journey</h2>
+        <p className="text-gray-500 text-center max-w-2xl mx-auto mb-20 text-lg">A robust, secure, and transparent bridge direct from the farm origin to the buyer's storefront.</p>
+        
+        <div className="max-w-6xl mx-auto relative">
+          {/* Connector Line (Hidden on Mobile) */}
+          <div className="hidden md:block absolute top-[50px] left-[10%] w-[80%] h-1 bg-gradient-to-r from-emerald-200 via-green-300 to-green-600 rounded-full"></div>
+
+          <div className="grid md:grid-cols-3 gap-12 relative z-10">
+            {/* Step 1 */}
+            <div className="relative group text-center flex flex-col items-center animate-slide-up">
+              <div className="w-24 h-24 bg-white rounded-full shadow-xl shadow-emerald-900/10 border-4 border-emerald-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+                <Sprout size={40} className="text-emerald-600" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
-              <p className="text-green-200/70 text-sm leading-relaxed">{item.desc}</p>
+              <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4">Step 01</span>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">Farmer Harvest</h3>
+              <p className="text-gray-500 leading-relaxed px-4">Farmers list their freshly harvested, organic produce directly on the platform at fair, algorithmically-backed prices.</p>
             </div>
-          ))}
+
+            {/* Step 2 */}
+            <div className="relative group text-center flex flex-col items-center animate-slide-up" style={{ animationDelay: '0.2s' }}>
+              <div className="w-24 h-24 bg-white rounded-full shadow-xl shadow-green-900/10 border-4 border-green-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+                <ShieldCheck size={40} className="text-green-600" />
+              </div>
+              <span className="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4">Step 02</span>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">Secure Escrow Network</h3>
+              <p className="text-gray-500 leading-relaxed px-4">Buyer funds are held securely. The Kissan Sarthi backend handles B2B quality verification, logistics, and instant split payouts.</p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="relative group text-center flex flex-col items-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
+              <div className="w-24 h-24 bg-white rounded-full shadow-xl shadow-teal-900/10 border-4 border-teal-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+                <Store size={40} className="text-teal-600" />
+              </div>
+              <span className="bg-teal-100 text-teal-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4">Step 03</span>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">B2B Buyer Delivery</h3>
+              <p className="text-gray-500 leading-relaxed px-4">Restaurants, wholesalers, and consumers receive farm-fresh agricultural goods with 100% digital traceability.</p>
+            </div>
+          </div>
         </div>
 
-        {/* Already have account link */}
-        <div className="text-center mt-12">
-          <p className="text-green-200/60 text-sm">
-            {t('alreadyHaveAccount')}{' '}
-            <button onClick={() => setView('login')} className="text-yellow-400 hover:text-yellow-300 font-semibold underline underline-offset-4 transition-colors">
-              {t('login')}
-            </button>
-          </p>
+        {/* Action Call */}
+        <div className="text-center mt-20 animate-fade-in-delay">
+          <p className="text-gray-600 text-lg mb-4">Ready to bypass the middlemen and join the revolution?</p>
+          <button 
+            onClick={() => setView('market')} 
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-xl hover:-translate-y-1 transition-all"
+          >
+            Explore the Digital Market <ChevronRight size={20} />
+          </button>
         </div>
       </div>
     </div>

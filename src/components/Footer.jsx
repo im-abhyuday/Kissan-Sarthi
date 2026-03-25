@@ -1,7 +1,7 @@
 import React from 'react';
 import { Sprout, Mail, Phone, MapPin, Leaf } from 'lucide-react';
 
-export default function Footer({ t }) {
+export default function Footer({ t, setView }) {
   return (
     <footer className="relative bg-gradient-to-b from-green-900 via-green-950 to-black text-green-200 overflow-hidden">
       {/* Decorative top wave */}
@@ -37,12 +37,17 @@ export default function Footer({ t }) {
           <div>
             <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">{t('quickLinks')}</h4>
             <ul className="space-y-2.5">
-              {[t('aboutUs'), t('howItWorks'), t('market'), t('support')].map((link, i) => (
+              {[
+                { label: 'Home', view: 'hero' },
+                { label: 'Buyer Marketplace', view: 'market' },
+                { label: 'Farmer Dashboard', view: 'dashboard' },
+                { label: 'Login / Register', view: 'login' }
+              ].map((link, i) => (
                 <li key={i}>
-                  <a href="#" className="text-sm text-green-300/70 hover:text-yellow-400 transition-colors duration-300 flex items-center gap-2 group">
+                  <button onClick={() => setView && setView(link.view)} className="text-sm text-green-300/70 hover:text-yellow-400 transition-colors duration-300 flex items-center gap-2 group">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-600 group-hover:bg-yellow-400 transition-colors duration-300"></span>
-                    {link}
-                  </a>
+                    {link.label}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -52,12 +57,15 @@ export default function Footer({ t }) {
           <div>
             <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Legal</h4>
             <ul className="space-y-2.5">
-              {[t('termsOfService'), t('privacyPolicy')].map((link, i) => (
+              {[
+                { label: t('termsOfService'), view: 'terms' },
+                { label: t('privacyPolicy'), view: 'privacy' }
+              ].map((link, i) => (
                 <li key={i}>
-                  <a href="#" className="text-sm text-green-300/70 hover:text-yellow-400 transition-colors duration-300 flex items-center gap-2 group">
+                  <button onClick={() => setView && setView(link.view)} className="text-sm text-green-300/70 hover:text-yellow-400 transition-colors duration-300 flex items-center gap-2 group">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-600 group-hover:bg-yellow-400 transition-colors duration-300"></span>
-                    {link}
-                  </a>
+                    {link.label}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -67,14 +75,14 @@ export default function Footer({ t }) {
           <div>
             <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">{t('contactUs')}</h4>
             <div className="space-y-3">
-              <a href="mailto:support@kissansarthi.in" className="flex items-center gap-3 text-sm text-green-300/70 hover:text-yellow-400 transition-colors">
-                <Mail size={16} className="flex-shrink-0" /> support@kissansarthi.in
+              <a href="mailto:kissansarthiorg@gmail.com" className="flex items-center gap-3 text-sm text-green-300/70 hover:text-yellow-400 transition-colors">
+                <Mail size={16} className="flex-shrink-0" /> kissansarthiorg@gmail.com
               </a>
-              <a href="tel:+911800123456" className="flex items-center gap-3 text-sm text-green-300/70 hover:text-yellow-400 transition-colors">
-                <Phone size={16} className="flex-shrink-0" /> 1800-123-456 (Toll Free)
+              <a href="tel:+9118001801551" className="flex items-center gap-3 text-sm text-green-300/70 hover:text-yellow-400 transition-colors">
+                <Phone size={16} className="flex-shrink-0" /> 1800-180-1551
               </a>
               <div className="flex items-start gap-3 text-sm text-green-300/70">
-                <MapPin size={16} className="flex-shrink-0 mt-0.5" /> New Delhi, India
+                <MapPin size={16} className="flex-shrink-0 mt-0.5" /> VIT Bhopal University
               </div>
             </div>
           </div>

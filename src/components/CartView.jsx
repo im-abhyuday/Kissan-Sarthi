@@ -1,7 +1,20 @@
-import React from 'react';
-import { ShoppingCart, Trash2, Leaf, ArrowLeft, ShoppingBag } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { ShoppingCart, Trash2, Leaf, ArrowLeft, ShoppingBag, Plus, Minus, Tag, Clock } from 'lucide-react';
 
-export default function CartView({ cart, removeFromCart, calculateTotal, setView, t }) {
+export default function CartView({ cart, addToCart, removeFromCart, calculateTotal, setView, t }) {
+  // Group identical items together
+  const groupedCart = useMemo(() => {
+    const groups = {};
+    cart.forEach(item => {
+      if (!groups[item.id]) {
+        groups[item.id] = { ...item, quantity: 0, rawInstances: [] };
+      }
+      groups[item.id].quantity += 1;
+      groups[item.id].rawInstances.push(item);
+    });
+    return Object.values(groups);
+  }, [cart]);
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex items-center gap-4 mb-8 animate-slide-up">
@@ -31,37 +44,79 @@ export default function CartView({ cart, removeFromCart, calculateTotal, setView
         </div>
       ) : (
         <div className="animate-slide-up">
-          <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
-            {cart.map((item, idx) => (
-              <div 
-                key={`${item.id}-${idx}`} 
-                className="flex justify-between items-center p-5 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors group"
-              >
-                <div className="flex items-center gap-4">
-                  {/* Image */}
-                  <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
-                    {item.image ? (
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <Leaf size={20} className="text-green-300" />
+          <div className="bg-white rounded-2xl shadow-md border border-gray-100 mb-6">
+            <div className="p-4 bg-gray-50 border-b border-gray-100 flex items-center gap-2">
+              <Tag size={18} className="text-emerald-600" />
+              <p className="text-sm text-gray-700"><strong>Wholesale Tip:</strong> Add 5 or more units of the same product to unlock a <span className="text-emerald-600 font-bold">15% Bulk B2B Discount!</span></p>
+            </div>
+            
+            <div className="divide-y divide-gray-50">
+              {groupedCart.map((item) => {
+                const isWholesale = item.quantity >= 5;
+                const unitPrice = parseInt(item.price);
+                const originalTotal = unitPrice * item.quantity;
+                const finalTotal = isWholesale ? Math.floor(originalTotal * 0.85) : originalTotal;
+                
+                return (
+                  <div 
+                    key={item.id} 
+                    className="flex flex-col sm:flex-row justify-between sm:items-center p-5 hover:bg-gray-50/50 transition-colors"
+                  >
+                    <div className="flex items-center gap-4 mb-4 sm:mb-0">
+                      {/* Image */}
+                      <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
+                        {item.image ? (
+                          <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Leaf size={20} className="text-green-300" />
+                          </div>
+                        )}
                       </div>
-                    )}
+                      <div>
+                        <h4 className="font-bold text-gray-800 text-lg leading-tight">{item.name}</h4>
+                        <p className="text-xs text-gray-500 mb-1">{t('seller')}: {item.seller}</p>
+                        
+                        <div className="flex items-center gap-2">
+                          <span className="text-green-700 font-bold">₹{unitPrice}/{item.unit}</span>
+                          {isWholesale && (
+                            <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                              Wholesale Applied (-15%)
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between sm:justify-end gap-6">
+                      {/* Quantity Controller */}
+                      <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl p-1 shadow-sm">
+                        <button 
+                          onClick={() => removeFromCart(item.id)}
+                          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
+                        >
+                          <Minus size={16} />
+                        </button>
+                        <span className="w-6 text-center font-bold text-gray-800">{item.quantity}</span>
+                        <button 
+                          onClick={() => addToCart(item.rawInstances[0])}
+                          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-emerald-50 text-emerald-600 transition-colors"
+                        >
+                          <Plus size={16} />
+                        </button>
+                      </div>
+                      
+                      <div className="text-right min-w-[80px]">
+                        <p className="font-extrabold text-xl text-gray-800">₹{finalTotal}</p>
+                        {isWholesale && (
+                          <p className="text-xs text-gray-400 line-through">₹{originalTotal}</p>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800">{item.name}</h4>
-                    <p className="text-sm text-gray-500">{t('seller')}: {item.seller}</p>
-                    <p className="text-green-700 font-bold mt-0.5">₹{item.price} / {item.unit}</p>
-                  </div>
-                </div>
-                <button 
-                  onClick={() => removeFromCart(item.id)} 
-                  className="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all duration-200 opacity-0 group-hover:opacity-100"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </div>
-            ))}
+                );
+              })}
+            </div>
           </div>
 
           {/* Total Footer */}
