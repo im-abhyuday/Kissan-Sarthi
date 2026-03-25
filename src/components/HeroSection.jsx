@@ -128,13 +128,13 @@ export default function HeroSection({ setView, t }) {
         {/* Floating Trust Chips (Option 5) */}
         <div className="animate-slide-up-delay flex flex-wrap justify-center gap-3 mb-10">
           <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-[11px] sm:text-xs font-semibold text-emerald-100 uppercase tracking-wider">
-            <ShieldCheck size={14} className="text-emerald-400" /> 100% Secure Escrow
+            <ShieldCheck size={14} className="text-emerald-400" /> {t('secureEscrow')}
           </span>
           <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-[11px] sm:text-xs font-semibold text-emerald-100 uppercase tracking-wider">
-            <CheckCircle2 size={14} className="text-emerald-400" /> Verified Organic Quality
+            <CheckCircle2 size={14} className="text-emerald-400" /> {t('verifiedOrganic')}
           </span>
           <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-[11px] sm:text-xs font-semibold text-emerald-100 uppercase tracking-wider">
-            <Truck size={14} className="text-emerald-400" /> Transparent Logistics
+            <Truck size={14} className="text-emerald-400" /> {t('transparentLogistics')}
           </span>
         </div>
 
@@ -168,11 +168,11 @@ export default function HeroSection({ setView, t }) {
           <div className="animate-marquee hover:pause whitespace-nowrap flex items-center gap-16 px-8 text-white/50 font-bold uppercase tracking-widest text-[13px]">
              {[...Array(2)].map((_, i) => (
                 <React.Fragment key={i}>
-                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default"><ShieldCheck size={18} className="text-emerald-500" /> RBI Compliant Escrow</span>
+                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default"><ShieldCheck size={18} className="text-emerald-500" /> {t('rbiCompliant')}</span>
                   <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default">Razorpay Route</span>
-                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default"><CheckCircle2 size={18} className="text-emerald-500" /> FSSAI Certified</span>
-                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default">Cashfree Payments</span>
-                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default"><Leaf size={18} className="text-emerald-500" /> 100% Organic Verified</span>
+                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default"><CheckCircle2 size={18} className="text-emerald-500" /> {t('fssai')}</span>
+                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default">{t('cashfreePayments')}</span>
+                  <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default"><Leaf size={18} className="text-emerald-500" /> {t('verifiedOrganic')}</span>
                   <span className="flex items-center gap-2 hover:text-white transition-colors cursor-default">Startup India</span>
                 </React.Fragment>
              ))}
@@ -202,7 +202,7 @@ export default function HeroSection({ setView, t }) {
                 <Sprout size={40} className="text-emerald-600" />
               </div>
               <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4">Step 01</span>
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">Farmer Harvest</h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">{t('farmerHarvest')}</h3>
               <p className="text-gray-500 leading-relaxed px-4">Farmers list their freshly harvested, organic produce directly on the platform at fair, algorithmically-backed prices.</p>
             </div>
 
@@ -212,7 +212,7 @@ export default function HeroSection({ setView, t }) {
                 <ShieldCheck size={40} className="text-green-600" />
               </div>
               <span className="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4">Step 02</span>
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">Secure Escrow Network</h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">{t('secureEscrowBrief')}</h3>
               <p className="text-gray-500 leading-relaxed px-4">Buyer funds are held securely. The Kissan Sarthi backend handles B2B quality verification, logistics, and instant split payouts.</p>
             </div>
 
@@ -222,7 +222,7 @@ export default function HeroSection({ setView, t }) {
                 <Store size={40} className="text-teal-600" />
               </div>
               <span className="bg-teal-100 text-teal-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4">Step 03</span>
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">B2B Buyer Delivery</h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">{t('buyerDelivery')}</h3>
               <p className="text-gray-500 leading-relaxed px-4">Restaurants, wholesalers, and consumers receive farm-fresh agricultural goods with 100% digital traceability.</p>
             </div>
           </div>
@@ -235,7 +235,7 @@ export default function HeroSection({ setView, t }) {
             onClick={() => setView('market')} 
             className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-xl hover:-translate-y-1 transition-all"
           >
-            Explore the Digital Market <ChevronRight size={20} />
+            {t('goToMarket')} <ChevronRight size={20} />
           </button>
         </div>
       </div>

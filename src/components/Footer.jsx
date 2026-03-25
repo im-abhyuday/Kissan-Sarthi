@@ -38,10 +38,10 @@ export default function Footer({ t, setView }) {
             <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">{t('quickLinks')}</h4>
             <ul className="space-y-2.5">
               {[
-                { label: 'Home', view: 'hero' },
-                { label: 'Buyer Marketplace', view: 'market' },
-                { label: 'Farmer Dashboard', view: 'dashboard' },
-                { label: 'Login / Register', view: 'login' }
+                { label: t('home') || 'Home', view: 'hero' },
+                { label: t('market'), view: 'market' },
+                { label: t('dashboard'), view: 'dashboard' },
+                { label: t('login'), view: 'login' }
               ].map((link, i) => (
                 <li key={i}>
                   <button onClick={() => setView && setView(link.view)} className="text-sm text-green-300/70 hover:text-yellow-400 transition-colors duration-300 flex items-center gap-2 group">
