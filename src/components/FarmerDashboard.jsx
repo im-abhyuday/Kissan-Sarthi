@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { User, Plus, Leaf, Package, IndianRupee, ShoppingBag, TrendingUp, Trash2, Cloud, Droplets, Thermometer, Wind, Upload, BookOpen, Building2, LayoutDashboard } from 'lucide-react';
+import { User, Plus, Leaf, Package, IndianRupee, ShoppingBag, TrendingUp, Trash2, Cloud, Droplets, Thermometer, Wind, Upload, BookOpen, Building2, LayoutDashboard, ScanSearch } from 'lucide-react';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import AgroWidget from './AgroWidget';
 import SchemeTracker from './SchemeTracker';
 import CommunityForum from './CommunityForum';
+import AICropSurgeon from './AICropSurgeon';
+
 export default function FarmerDashboard({ user, products, onAddProduct, onDeleteProduct, t }) {
   const myProducts = products.filter(p => p.sellerId === user.id || p.seller === (user.profile?.fullName || user.email));
   
@@ -121,6 +123,12 @@ export default function FarmerDashboard({ user, products, onAddProduct, onDelete
           className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all whitespace-nowrap ${activeTab === 'schemes' ? 'bg-emerald-600 text-white shadow-md' : 'bg-white border border-gray-200 text-gray-600 hover:bg-emerald-50 hover:border-emerald-200'}`}
         >
           <Building2 size={18} /> Govt Schemes
+        </button>
+        <button 
+          onClick={() => setActiveTab('surgeon')}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all whitespace-nowrap ${activeTab === 'surgeon' ? 'bg-yellow-500 text-white shadow-md' : 'bg-white border border-gray-200 text-gray-600 hover:bg-yellow-50 hover:text-yellow-700 hover:border-yellow-200 border-l-2 border-l-yellow-400 pl-4'}`}
+        >
+          <ScanSearch size={18} /> AI Crop Surgeon
         </button>
       </div>
 
@@ -363,6 +371,12 @@ export default function FarmerDashboard({ user, products, onAddProduct, onDelete
       {activeTab === 'schemes' && (
         <div className="animate-fade-in">
           <SchemeTracker userState={user.profile?.state} />
+        </div>
+      )}
+
+      {activeTab === 'surgeon' && (
+        <div className="animate-fade-in">
+          <AICropSurgeon />
         </div>
       )}
 

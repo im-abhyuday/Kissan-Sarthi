@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "./App.css";
 import { TRANSLATIONS } from './data/translations';
+import { ArrowLeft } from 'lucide-react';
 
 // Services
 import { getCurrentSessionUser, signOut } from './services/authService';
@@ -26,6 +27,7 @@ export default function App() {
   const [lang, setLang] = useState('en');
   const [user, setUser] = useState(null);
   const [view, setView] = useState('landing');
+  const [history, setHistory] = useState(['landing']);
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,23 +45,44 @@ export default function App() {
       const { user: sessionUser } = await getCurrentSessionUser();
       if (sessionUser) {
         setUser(sessionUser);
-        setView(sessionUser.role === 'farmer' ? 'dashboard' : 'market');
+        const startView = sessionUser.role === 'farmer' ? 'dashboard' : 'market';
+        setView(startView);
+        setHistory([startView]);
       }
       setLoading(false);
     };
     initApp();
   }, []);
 
+  const handleSetView = (newView) => {
+    if (newView !== view) {
+      setHistory(prev => [...prev, newView]);
+      setView(newView);
+    }
+  };
+
+  const handleBack = () => {
+    if (history.length > 1) {
+      const newHistory = [...history];
+      newHistory.pop();
+      const prevView = newHistory[newHistory.length - 1];
+      setView(prevView);
+      setHistory(newHistory);
+    }
+  };
+
   // Auth handlers
   const handleLogin = (userData) => {
     setUser(userData);
-    setView(userData.role === 'farmer' ? 'dashboard' : 'market');
+    const destination = userData.role === 'farmer' ? 'dashboard' : 'market';
+    handleSetView(destination);
   };
 
   const handleLogout = async () => {
     await signOut();
     setUser(null);
     setView('landing');
+    setHistory(['landing']);
     setCart([]);
   };
 
@@ -119,13 +142,23 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-stone-50 font-sans text-gray-900 flex flex-col">
+      {history.length > 1 && (
+        <button 
+          onClick={handleBack}
+          className="fixed bottom-6 left-6 z-40 bg-white/90 backdrop-blur-md p-4 rounded-full shadow-2xl border border-gray-200 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 hover:scale-110 transition-all flex items-center justify-center group"
+          title="Go Back"
+        >
+          <ArrowLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
+        </button>
+      )}
+      
       {showNavbar && (
         <Navbar 
           user={user} 
           cart={cart} 
           lang={lang} 
           setLang={setLang} 
-          setView={setView} 
+          setView={handleSetView} 
           onLogout={handleLogout} 
           t={t} 
         />
@@ -133,12 +166,12 @@ export default function App() {
       
       <main className="flex-1">
         <div key={view} className="animate-fade-in">
-          {view === 'landing' && <HeroSection setView={setView} t={t} />}
-          {view === 'terms' && <TermsOfService setView={setView} t={t} />}
-          {view === 'privacy' && <PrivacyPolicy setView={setView} t={t} />}
-          {view === 'login' && <LoginScreen setView={setView} onLogin={handleLogin} t={t} />}
-          {view === 'farmer-signup' && <FarmerSignup setView={setView} onLogin={handleLogin} t={t} />}
-          {view === 'buyer-signup' && <BuyerSignup setView={setView} onLogin={handleLogin} t={t} />}
+          {view === 'landing' && <HeroSection setView={handleSetView} t={t} />}
+          {view === 'terms' && <TermsOfService setView={handleSetView} t={t} />}
+          {view === 'privacy' && <PrivacyPolicy setView={handleSetView} t={t} />}
+          {view === 'login' && <LoginScreen setView={handleSetView} onLogin={handleLogin} t={t} />}
+          {view === 'farmer-signup' && <FarmerSignup setView={handleSetView} onLogin={handleLogin} t={t} />}
+          {view === 'buyer-signup' && <BuyerSignup setView={handleSetView} onLogin={handleLogin} t={t} />}
           {view === 'dashboard' && (
             <FarmerDashboard 
               user={user} 
@@ -155,7 +188,7 @@ export default function App() {
               addToCart={addToCart}
               removeFromCart={removeFromCart} 
               calculateTotal={calculateTotal} 
-              setView={setView} 
+              setView={handleSetView} 
               t={t} 
             />
           )}
@@ -163,15 +196,15 @@ export default function App() {
             <CheckoutPayment 
               calculateTotal={calculateTotal} 
               setCart={setCart} 
-              setView={setView} 
+              setView={handleSetView} 
               t={t} 
             />
           )}
-          {view === 'success' && <SuccessScreen setView={setView} t={t} />}
+          {view === 'success' && <SuccessScreen setView={handleSetView} t={t} />}
         </div>
       </main>
 
-      {showFooter && <Footer t={t} setView={setView} />}
+      {showFooter && <Footer t={t} setView={handleSetView} />}
       <AgroChatbot />
     </div>
   );

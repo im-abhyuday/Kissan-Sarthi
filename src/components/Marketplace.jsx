@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ShoppingCart, Leaf, Sprout, Star, Filter, MapPin, ShieldCheck, X, Calendar, Truck, Info } from 'lucide-react';
 import { CATEGORIES } from '../data/mockProducts';
+import FoodPrintTraceability from './FoodPrintTraceability';
 
 export default function Marketplace({ products, addToCart, t }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -147,82 +148,10 @@ export default function Marketplace({ products, addToCart, t }) {
       )}
 
       {/* Traceability Passport Modal */}
-      {selectedProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-fade-in" onClick={() => setSelectedProduct(null)}>
-          <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-slide-up" onClick={e => e.stopPropagation()}>
-            
-            {/* Header image */}
-            <div className="h-40 relative bg-stone-100">
-              {selectedProduct.image ? (
-                <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-emerald-600 to-green-500 flex items-center justify-center">
-                   <Leaf size={48} className="text-white/50" />
-                </div>
-              )}
-              <div className="absolute top-4 right-4">
-                 <button onClick={() => setSelectedProduct(null)} className="w-8 h-8 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white backdrop-blur-md transition-all">
-                   <X size={18} />
-                 </button>
-              </div>
-              <div className="absolute -bottom-6 left-6 w-16 h-16 bg-white rounded-2xl shadow-lg border-4 border-white overflow-hidden flex items-center justify-center font-bold text-xl text-emerald-700">
-                <img src={`https://ui-avatars.com/api/?name=${selectedProduct.seller}&background=047857&color=fff`} className="w-full h-full" alt="Seller" />
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="p-6 pt-10">
-              <div className="flex items-center gap-2 mb-2">
-                <ShieldCheck size={20} className="text-emerald-500" />
-                <span className="text-sm font-bold text-emerald-600 tracking-wider uppercase">Digital Traceability Passport</span>
-              </div>
-              
-              <h3 className="text-2xl font-bold text-gray-800">{selectedProduct.name}</h3>
-              <p className="text-gray-500 mb-6 flex items-center gap-2">Grown by <span className="font-bold text-gray-700">{selectedProduct.seller}</span></p>
-
-              <div className="space-y-4">
-                <div className="flex items-center gap-4 p-3 bg-stone-50 rounded-xl border border-stone-100">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center"><MapPin size={20} /></div>
-                  <div>
-                    <p className="text-xs text-stone-500 font-medium uppercase tracking-wider">Farm Location</p>
-                    <p className="font-bold text-gray-800">{selectedProduct.seller.length % 2 === 0 ? 'Indore, Madhya Pradesh' : 'Nashik, Maharashtra'}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4 p-3 bg-stone-50 rounded-xl border border-stone-100">
-                  <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center"><Calendar size={20} /></div>
-                  <div>
-                    <p className="text-xs text-stone-500 font-medium uppercase tracking-wider">Harvested On</p>
-                    <p className="font-bold text-gray-800">
-                      {new Date(Date.now() - 2 * 86400000).toLocaleDateString()} (2 Days Ago)
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4 p-3 bg-stone-50 rounded-xl border border-stone-100">
-                  <div className="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center"><Info size={20} /></div>
-                  <div>
-                    <p className="text-xs text-stone-500 font-medium uppercase tracking-wider">Certifications</p>
-                    <div className="flex gap-2 mt-1">
-                      <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded border border-green-200 font-bold">100% Organic</span>
-                      <span className="text-[10px] bg-sky-100 text-sky-700 px-2 py-0.5 rounded border border-sky-200 font-bold">Pesticide Free</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8 flex gap-3">
-                <button 
-                  onClick={() => { handleAdd(selectedProduct, {stopPropagation:()=>{}}); setSelectedProduct(null); }}
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold transition-all shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2"
-                >
-                  <ShoppingCart size={18} /> Add to Cart (₹{selectedProduct.price}/{selectedProduct.unit})
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <FoodPrintTraceability 
+        product={selectedProduct} 
+        onClose={() => setSelectedProduct(null)} 
+      />
     </div>
   );
 }

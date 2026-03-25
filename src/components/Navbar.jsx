@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingCart, Sprout, Globe, Menu, X, LogOut } from 'lucide-react';
+import { ShoppingCart, Sprout, Globe, Menu, X, LogOut, Handshake } from 'lucide-react';
 import { LANGUAGES } from '../data/translations';
 
 export default function Navbar({ user, cart, lang, setLang, setView, onLogout, t }) {
